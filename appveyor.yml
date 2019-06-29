@@ -7,7 +7,7 @@ install:
 before_build:
 - cmd: appveyor-retry nuget restore
 build:
-  project: JitUnpacker.sln
+  project: JitUnpacker-Framework.sln
   verbosity: normal
 artifacts:
 - path: bin\Release\
