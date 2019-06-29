@@ -12,12 +12,12 @@ namespace JitTools {
 		private bool _preserveTokens;
 		private bool _keepMaxStacks;
 
-		[Argument("-f", IsRequired = true, Type = "FILE", Description = "程序集路径")]
+		[Argument("-f", IsRequired = true, Type = "FILE", Description = "Assembly path")]
 		internal string AssemblyPathCliSetter {
 			set => AssemblyPath = value;
 		}
 
-		[Argument("-hook-type", IsRequired = false, DefaultValue = "Inline", Type = "STR", Description = "Hook类型")]
+		[Argument("-hook-type", IsRequired = false, DefaultValue = "Inline", Type = "STR", Description = "Jit hook type")]
 		internal string HookTypeCliSetter {
 			set {
 				switch (value.ToUpperInvariant()) {
@@ -39,22 +39,22 @@ namespace JitTools {
 			}
 		}
 
-		[Argument("--dump-before-cctor", Description = "是否在类构造器运行后进行Dump")]
+		[Argument("--dump-before-cctor", Description = "If dump module beform run static constructor")]
 		internal bool DumpBeforeStaticConstructorCliSetter {
 			set => _dumpBeforeStaticConstructor = value;
 		}
 
-		[Argument("--preserve-runtime", Description = "是否保留运行时类型")]
+		[Argument("--preserve-runtime", Description = "If preserve packer runtime")]
 		internal bool PreserveRuntimeCliSetter {
 			set => _preserveRuntime = value;
 		}
 
-		[Argument("--preserve-tokens", Description = "是否保留原Token")]
+		[Argument("--preserve-tokens", Description = "If preserve original tokens")]
 		internal bool PreserveTokensCliSetter {
 			set => PreserveTokens = value;
 		}
 
-		[Argument("--keep-max-stacks", Description = "是否保持原MaxStack")]
+		[Argument("--keep-max-stacks", Description = "If keep old max-stacks")]
 		internal bool KeepMaxStacksCliSetter {
 			set => KeepMaxStacks = value;
 		}

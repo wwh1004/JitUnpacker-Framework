@@ -45,6 +45,11 @@
     <Compile Include="RuntimeFunctionConfigGeneratorSettings.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="RuntimeFunctionConfigGenerator.bat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Libraries\dnlib\src\dnlib.csproj">
       <Project>{fdfc1237-143f-4919-8318-4926901f4639}</Project>
       <Name>dnlib</Name>

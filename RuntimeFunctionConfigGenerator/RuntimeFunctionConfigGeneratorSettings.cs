@@ -6,7 +6,7 @@ namespace JitTools {
 	public sealed class RuntimeFunctionConfigGeneratorSettings {
 		private string _symbolsDirectory;
 
-		[Argument("-d", IsRequired = true, Type = "DIR", Description = "符号文件所在文件夹")]
+		[Argument("-d", IsRequired = true, Type = "DIR", Description = "The directory of symbols")]
 		internal string SymbolsDirectoryCliSetter {
 			set => SymbolsDirectory = value;
 		}
