@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{259737BD-2CEC-486F-A7C8-98D987A07139}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>JitUnpacker</RootNamespace>
+    <AssemblyName>JitUnpacker</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>7.3</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>7.3</LangVersion>
+  </PropertyGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Compile Include="ConsoleTitleUtils.cs" />
+    <Compile Include="DnlibLogger.cs" />
+    <Compile Include="HandleProcessCorruptedStateExceptionsAttribute.cs" />
+    <Compile Include="JitUnpacker.cs" />
+    <Compile Include="JitUnpackerSettings.cs" />
+    <Compile Include="Logger.cs" />
+    <Compile Include="MarshalEx.cs" />
+    <Compile Include="NativeMethods.cs" />
+    <Compile Include="ProgressBar.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Runtime\CorInfo.cs" />
+    <Compile Include="Runtime\IJitHook.cs" />
+    <Compile Include="Runtime\JitHookFactory.cs" />
+    <Compile Include="Runtime\JitHookInlineImpl.cs" />
+    <Compile Include="Runtime\JitHookUtils.cs" />
+    <Compile Include="Runtime\JitHookVTableImpl.cs" />
+    <Compile Include="Runtime\RuntimeConstants.cs" />
+    <Compile Include="Runtime\RuntimeEnvironment.cs" />
+    <Compile Include="Runtime\RuntimeFunctions.cs" />
+    <Compile Include="Runtime\RuntimePatcher.cs" />
+    <Compile Include="Unpackers\IMethodDumper.cs" />
+    <Compile Include="Unpackers\IUnpacker.cs" />
+    <Compile Include="Unpackers\IUnpackerDetector.cs" />
+    <Compile Include="Unpackers\JitMethodBodyReader.cs" />
+    <Compile Include="Unpackers\MethodDumperBase.cs" />
+    <Compile Include="Unpackers\Unknown\MethodDumper.cs" />
+    <Compile Include="Unpackers\Unknown\Unpacker.cs" />
+    <Compile Include="Unpackers\Unknown\UnpackerDetector.cs" />
+    <Compile Include="Unpackers\UnpackerContext.cs" />
+    <Compile Include="Unpackers\UnpackerUtils.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Libraries\dnlib\src\dnlib.csproj">
+      <Project>{bae1899f-26f0-4274-8599-0fced94edb56}</Project>
+      <Name>dnlib</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="Tool.Interface">
+      <HintPath>..\Libraries\Tool.Interface\Tool.Interface.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
