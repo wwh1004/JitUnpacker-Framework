@@ -28,7 +28,10 @@ namespace JitTools.Runtime {
 			set => _targetMethodHandle = value;
 		}
 
-		public JitCompilationCallback Callback { get => _callback; set => _callback = value; }
+		public JitCompilationCallback Callback {
+			get => _callback;
+			set => _callback = value;
+		}
 
 		static JitHookVTableImpl() {
 			// 防止JitHook进入死循环，先编译一些方法

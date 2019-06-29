@@ -1,0 +1,22 @@
+version: '{build}'
+image: Visual Studio 2019 Preview
+configuration: Release
+platform: Any CPU
+install:
+- cmd: git submodule update --init --recursive
+before_build:
+- cmd: appveyor-retry nuget restore
+build:
+  project: JitUnpacker.sln
+  verbosity: normal
+artifacts:
+- path: bin\Release\
+  name: JitUnpacker
+deploy:
+- provider: GitHub
+  tag: $(APPVEYOR_REPO_TAG_NAME)
+  release: JitUnpacker
+  auth_token:
+    secure: +8UJ1C312inNq+80I8WST34vPMrCylnmTx+9rmuIh1qnsArA5x2b8yc+kcwkXmQC
+  on:
+    APPVEYOR_REPO_TAG: true
