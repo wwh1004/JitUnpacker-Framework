@@ -8,16 +8,18 @@ namespace JitTools {
 		private string _assemblyPath;
 		private JitHookType _hookType;
 		private bool _dumpBeforeStaticConstructor;
+		private bool _preserveAll;
 		private bool _preserveRuntime;
 		private bool _preserveTokens;
 		private bool _keepMaxStacks;
+		private bool _useNativeWriter;
 
 		[Argument("-f", IsRequired = true, Type = "FILE", Description = "Assembly path")]
 		internal string AssemblyPathCliSetter {
 			set => AssemblyPath = value;
 		}
 
-		[Argument("-hook-type", IsRequired = false, DefaultValue = "Inline", Type = "STR", Description = "Jit hook type")]
+		[Argument("-hook-type", IsRequired = false, DefaultValue = "Inline", Type = "STR", Description = "JIT hook type")]
 		internal string HookTypeCliSetter {
 			set {
 				switch (value.ToUpperInvariant()) {
@@ -39,24 +41,34 @@ namespace JitTools {
 			}
 		}
 
-		[Argument("--dump-before-cctor", Description = "If dump module beform run static constructor")]
+		[Argument("--dump-before-cctor", Description = "Dump module beform run static constructor")]
 		internal bool DumpBeforeStaticConstructorCliSetter {
 			set => _dumpBeforeStaticConstructor = value;
 		}
 
-		[Argument("--preserve-runtime", Description = "If preserve packer runtime")]
+		[Argument("--preserve-all", Description = "Preserve all(--preserve-tokens --preserve-tokens --keep-max-stacks --use-native-writer)")]
+		internal bool PreserveAllCliSetter {
+			set => _preserveAll = value;
+		}
+
+		[Argument("--preserve-runtime", Description = "Preserve packer runtime")]
 		internal bool PreserveRuntimeCliSetter {
 			set => _preserveRuntime = value;
 		}
 
-		[Argument("--preserve-tokens", Description = "If preserve original tokens")]
+		[Argument("--preserve-tokens", Description = "Preserve original tokens")]
 		internal bool PreserveTokensCliSetter {
 			set => PreserveTokens = value;
 		}
 
-		[Argument("--keep-max-stacks", Description = "If keep old max-stacks")]
+		[Argument("--keep-max-stacks", Description = "Keep old max-stacks")]
 		internal bool KeepMaxStacksCliSetter {
 			set => KeepMaxStacks = value;
+		}
+
+		[Argument("--use-native-writer", Description = "Use dnlib.DotNet.Writer.NativeModuleWriter")]
+		internal bool UseNativeWriterCliSetter {
+			set => UseNativeWriter = value;
 		}
 
 		public string AssemblyPath {
@@ -82,18 +94,23 @@ namespace JitTools {
 		}
 
 		public bool PreserveRuntime {
-			get => _preserveRuntime;
+			get => _preserveAll || _preserveRuntime;
 			set => _preserveRuntime = value;
 		}
 
 		public bool PreserveTokens {
-			get => _preserveTokens;
+			get => _preserveAll || _preserveTokens;
 			set => _preserveTokens = value;
 		}
 
 		public bool KeepMaxStacks {
-			get => _keepMaxStacks;
+			get => _preserveAll || _keepMaxStacks;
 			set => _keepMaxStacks = value;
+		}
+
+		public bool UseNativeWriter {
+			get => _preserveAll || _useNativeWriter;
+			set => _useNativeWriter = value;
 		}
 	}
 }

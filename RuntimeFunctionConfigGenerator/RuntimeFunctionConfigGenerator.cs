@@ -2,7 +2,6 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
-using dnlib.PE;
 using Tool.Interface;
 using static JitTools.NativeMethods;
 
@@ -27,7 +26,9 @@ namespace JitTools {
 			StringBuilder buffer;
 			string clrModulePath;
 			string jitModulePath;
+			Version jitFileVersion;
 			byte* address;
+			bool isClr471AndLater;
 
 			configName = "JitUnpacker.RuntimeFunctions";
 			if (RuntimeEnvironment.Is32Bit)
@@ -44,7 +45,8 @@ namespace JitTools {
 			jitModulePath = buffer.ToString();
 
 			WriteConfig(config, "CLR_VERSION", GetFileVersion(clrModulePath).ToString());
-			WriteConfig(config, "JIT_VERSION", GetFileVersion(jitModulePath).ToString());
+			jitFileVersion = GetFileVersion(jitModulePath);
+			WriteConfig(config, "JIT_VERSION", jitFileVersion.ToString());
 
 			WriteFunctionRva(config, "?Reset@MethodDesc@@QAEXXZ", "METHODDESC_RESET_RVA");
 			WriteFunctionRva(config, "?DoPrestub@MethodDesc@@QAEKPAVMethodTable@@@Z", "METHODDESC_DOPRESTUB_RVA");
@@ -72,13 +74,15 @@ namespace JitTools {
 				WriteConfig(config, "METHODDESC_DOPRESTUB_CALL_CHECKRUNCLASSINITTHROWING_RVA", (uint)(address - (byte*)RuntimeEnvironment.ClrModuleHandle));
 			}
 
-			if (RuntimeEnvironment.IsClr45x)
+			isClr471AndLater = jitFileVersion >= new Version(4, 7, 2558, 0);
+
+			if (isClr471AndLater)
 				address = GetFirstCallAddress("jitNativeCode", "?compCompile@Compiler@@QAIHPAUCORINFO_METHOD_STRUCT_@@PAUCORINFO_MODULE_STRUCT_@@PAVICorJitInfo@@PAUCORINFO_METHOD_INFO@@PAPAXPAKI@Z");
 			else
 				address = GetFirstCallAddress("?jitNativeCode@@YIHPAUCORINFO_METHOD_STRUCT_@@PAUCORINFO_MODULE_STRUCT_@@PAVICorJitInfo@@PAUCORINFO_METHOD_INFO@@PAPAXPAKIPAX@Z", "?compCompile@Compiler@@QAIHPAUCORINFO_METHOD_STRUCT_@@PAUCORINFO_MODULE_STRUCT_@@PAVICorJitInfo@@PAUCORINFO_METHOD_INFO@@PAPAXPAKI@Z");
 			WriteConfig(config, "CALL_COMPCOMPILE_RVA", (uint)(address - (byte*)RuntimeEnvironment.JitModuleHandle));
 
-			if (RuntimeEnvironment.IsClr45x)
+			if (isClr471AndLater)
 				WriteFunctionRva(config, "jitNativeCode", "JITNATIVECODE_RVA");
 			else
 				WriteFunctionRva(config, "?jitNativeCode@@YIHPAUCORINFO_METHOD_STRUCT_@@PAUCORINFO_MODULE_STRUCT_@@PAVICorJitInfo@@PAUCORINFO_METHOD_INFO@@PAPAXPAKIPAX@Z", "JITNATIVECODE_RVA");

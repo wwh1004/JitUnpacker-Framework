@@ -16,7 +16,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace JitTools {
-	public sealed unsafe partial class JitUnpacker : ITool<JitUnpackerSettings> {
+	public sealed unsafe class JitUnpacker : ITool<JitUnpackerSettings> {
 		private static IUnpacker _unpacker;
 
 		public string Title => ConsoleTitleUtils.GetTitle();
@@ -196,17 +196,23 @@ namespace JitTools {
 		private static void SaveAs(string filePath) {
 			Logger.Instance.LogInfo(_unpacker.MethodDumper.DumpCount.ToString() + " methods are decrypted");
 			if (_unpacker.MethodDumper.DumpCount != 0) {
-				ModuleWriterOptions moduleWriterOptions;
+				ModuleWriterOptionsBase options;
 
-				moduleWriterOptions = new ModuleWriterOptions(_unpacker.Context.DumpedModuleDef);
+				if (_unpacker.Context.Settings.UseNativeWriter)
+					options = new NativeModuleWriterOptions(_unpacker.Context.DumpedModuleDef, false);
+				else
+					options = new ModuleWriterOptions(_unpacker.Context.DumpedModuleDef);
 				if (_unpacker.Context.Settings.PreserveTokens)
-					moduleWriterOptions.MetadataOptions.Flags |= MetadataFlags.PreserveRids | MetadataFlags.PreserveUSOffsets | MetadataFlags.PreserveBlobOffsets | MetadataFlags.PreserveExtraSignatureData;
+					options.MetadataOptions.Flags |= MetadataFlags.PreserveRids | MetadataFlags.PreserveUSOffsets | MetadataFlags.PreserveBlobOffsets | MetadataFlags.PreserveExtraSignatureData;
 				if (_unpacker.Context.Settings.KeepMaxStacks)
-					moduleWriterOptions.MetadataOptions.Flags |= MetadataFlags.KeepOldMaxStack;
-				moduleWriterOptions.Logger = DnlibLogger.Instance;
+					options.MetadataOptions.Flags |= MetadataFlags.KeepOldMaxStack;
+				options.Logger = DnlibLogger.Instance;
 				Logger.Instance.LogInfo("Saving: " + filePath);
 				Logger.Instance.LogNewLine();
-				_unpacker.Context.DumpedModuleDef.Write(filePath, moduleWriterOptions);
+				if (_unpacker.Context.Settings.UseNativeWriter)
+					_unpacker.Context.DumpedModuleDef.NativeWrite(filePath, (NativeModuleWriterOptions)options);
+				else
+					_unpacker.Context.DumpedModuleDef.Write(filePath, (ModuleWriterOptions)options);
 			}
 		}
 
