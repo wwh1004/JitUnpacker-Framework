@@ -41,7 +41,7 @@ namespace JitTools {
 			}
 		}
 
-		[Argument("--dump-before-cctor", Description = "Dump module beform run static constructor")]
+		[Argument("--dump-before-cctor", Description = "Dump module before run static constructor")]
 		internal bool DumpBeforeStaticConstructorCliSetter {
 			set => _dumpBeforeStaticConstructor = value;
 		}
