@@ -16,7 +16,6 @@ namespace JitTools {
 				throw new NotSupportedException();
 
 			_settings = settings;
-			PdbInitialize();
 			GenerateForJitUnpacker();
 		}
 
@@ -43,6 +42,12 @@ namespace JitTools {
 			clrModulePath = buffer.ToString();
 			GetModuleFileName(RuntimeEnvironment.JitModuleHandle, buffer, MAX_PATH);
 			jitModulePath = buffer.ToString();
+
+			if (string.IsNullOrEmpty(_settings.SymbolsDirectory)) {
+				CallProcess("PDBDownloader.exe", $".\\Symbols \"{clrModulePath}|{jitModulePath}\"");
+				_settings.SymbolsDirectory = Path.GetFullPath("Symbols");
+			}
+			PdbInitialize();
 
 			WriteConfig(config, "CLR_VERSION", GetFileVersion(clrModulePath).ToString());
 			jitFileVersion = GetFileVersion(jitModulePath);
@@ -98,6 +103,21 @@ namespace JitTools {
 
 			versionInfo = FileVersionInfo.GetVersionInfo(filePath);
 			return new Version(versionInfo.FileMajorPart, versionInfo.FileMinorPart, versionInfo.FileBuildPart, versionInfo.FilePrivatePart);
+		}
+
+		private static void CallProcess(string filePath, string arguments) {
+			using (Process process = new Process() {
+				StartInfo = new ProcessStartInfo(filePath, arguments) {
+					CreateNoWindow = true,
+					UseShellExecute = false
+				}
+			}) {
+				Console.WriteLine();
+				Console.WriteLine(filePath + " " + arguments);
+				Console.WriteLine();
+				process.Start();
+				process.WaitForExit();
+			}
 		}
 
 		private void PdbInitialize() {

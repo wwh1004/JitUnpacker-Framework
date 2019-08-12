@@ -61,5 +61,10 @@
       <HintPath>..\Libraries\Tool.Interface\Tool.Interface.dll</HintPath>
     </Reference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="PDBDownloader.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
